@@ -106,6 +106,56 @@ app.get('/api/headers', (req, res) => {
 });
 
 
+app.use('/api/post', (req, res) => {
+
+  const method = req.method;
+
+  if (method !== 'POST') {
+    res.status(405).send('Method not allowed');
+    return;
+  }
+
+  const body = Object.entries(req.body);
+  const arr = [];
+  const bgColor = '#ZZZZZZ';  // <- Backgroud Color Here 
+  const fgColor = '#ZZZZZZ';  // <- Foregroud Color Here 
+
+  for (const [key, value] of body) {
+    arr.push({ key, value });
+  }
+
+  switch (format) {
+    case 'html':
+        const html_res = `
+          <html>
+            <head>
+              <style>
+                body {
+                  background-color: ${CheckColor(bgColor,'#FFFFFF')};
+                  color: ${CheckColor(fgColor,'#000000')};
+                }
+              </style>
+            </head>
+            <body>
+              ${arr.map(({key, value}) => `<p>${key}: ${value}</p>`).join('')}
+            </body>
+          </html>
+        `;
+        res.type('html').send(html_res);
+        break;
+    case 'json':
+        res.type('json').send(JSON.stringify(arr));
+        break;
+    case 'xml':
+        const xml = `<body>${arr.map(({key, value}) => `<${key}>${value}</${key}>`).join('')}</body>`;
+        res.type('xml').send(xml);
+        break;
+    default:
+        res.send(`Invalid format`);
+  }
+
+});
+
 app.listen(PORT, HOST, () => {
     console.log(`Running on http://${HOST}:${PORT}`);
 });
