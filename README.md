@@ -1,3 +1,4 @@
 # discovercars_taks
-# Test Windows
-# 1.1 Done
+App folder contains everything for web aplication
+
+Nginx folder contains configuration for proxy
